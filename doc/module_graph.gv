@@ -1,0 +1,55 @@
+digraph G {
+label = "The module dependency graph of High-level Schema Checker and Compiler";
+nodesep=.5;
+ranksep=2;
+rankdir=BT;
+
+s_Check -> Util;
+s_Check -> s_Schema;
+
+s_Compile -> Util;
+s_Compile -> s_Schema;
+
+s_Plugin -> Util;
+s_Plugin -> s_Schema;
+s_Plugin -> s_Check;
+s_Plugin -> s_Compile;
+
+c_Check -> Util;
+c_Check -> s_Schema;
+
+c_Expand -> Util;
+c_Expand -> s_Schema;
+c_Expand -> c_SHA256;
+
+c_Plugin -> Util;
+c_Plugin -> s_Schema;
+c_Plugin -> c_Check;
+c_Plugin -> c_Expand;
+
+
+CLI -> Util;
+CLI -> s_Schema;
+CLI -> s_Check;
+CLI -> s_Compile;
+CLI -> c_Check;
+CLI -> c_Expand;
+
+
+HTTP -> Util;
+HTTP -> s_Schema;
+HTTP -> s_Check;
+HTTP -> s_Compile;
+HTTP -> c_Check;
+HTTP -> c_Expand;
+
+s_Schema [label="schema/Schema"]
+s_Check [label="schema/Check"]
+s_Compile [label="schema/Compile"]
+s_Plugin [label="schema/Plugin"]
+c_Check [label="cred/Check"]
+c_Expand [label="cred/Expand"]
+c_Plugin [label="cred/Plugin"]
+c_SHA256 [label="cred/SHA256"]
+
+}

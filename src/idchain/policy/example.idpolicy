@@ -1,0 +1,22 @@
+policy MyPolicy
+
+with
+  // schemas
+  p = Passport 1.0
+  d = Degree 0.1
+  b = BuyLiquor 0.1
+
+  // issuers
+  US = 93b2ed24e2b3a3ba82b064cf27e626d1aae28c49
+  NL = 7f242ad91255d068c4ce7a980daba9adb0129824  
+
+require
+  (b.isAdult and d.hasPhD or p.issuer in {$US, $NL})
+   and proof(b.age > 39) and p.date > 2010-01-31
+  
+  
+  
+ 
+ 
+
+ 

@@ -1,0 +1,56 @@
+
+schema passport 1.0 {
+    credential_offered: unix_time
+    bsn: integer
+    document_number: integer
+    surname: string
+    given_name: string
+    gender: string
+    nationality_code: string
+    birth_date: unix_time
+    birth_place: string
+    authority: string
+    date_of_issue: unix_time
+    date_of_expiry: unix_time
+
+}
+
+
+
+schema company 1.0 {
+    credential_offered: unix_time
+    kvk_number: integer
+    legal_name: string
+    street_address: string
+    address_locality: string
+    postal_code: string
+    establishment_number: integer
+    registration_date: unix_time
+    last_ownership_verification: unix_time
+    owner_name: string
+    owner_bsn: integer
+}
+
+
+schema degree 1.1 {
+
+  first_name: string
+  last_name: string
+
+  graduation_date : date = $2018-06-20T11:05:30.995Z$
+  average_grade : integer
+  cum_laude : boolean = average_grade >= 8
+
+  university_domain : string = "uu.nl"
+
+}
+
+schema master_degree 0.5 : degree 1.1 {
+  thesis_title : string
+  thesis_grade : integer
+  email_address : string = first_name + "." + last_name + "@" + university_domain
+}
+
+schema phd_degree 0.2 : master_degree 0.5 {
+  submission_time : unix_time
+}

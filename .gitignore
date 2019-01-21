@@ -1,0 +1,5 @@
+bin/
+test_results/
+*.class
+.idea/
+*.iml

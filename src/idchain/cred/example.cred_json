@@ -1,0 +1,11 @@
+{"schema_id":"4cU41vWW82ArfxJxHkzXPG:2:phd_degree:0.2"
+,"values":{ 
+       "issuance_time@unix_time": {"raw": "123", "encoded": "0"},
+       "first_name@string": {"raw": "hello", "encoded": "456"}, 
+       "last_name@string": {"raw": "world", "encoded": "3"}, 
+       "average_grade@integer": {"raw": "3", "encoded": "0"},
+       "thesis_title@string": {"raw": "title", "encoded": "123"},
+       "thesis_grade@integer": {"raw": "4", "encoded": "123"},
+       "submission_time@unix_time": {"raw": "3", "encoded": "123"}
+      }
+}

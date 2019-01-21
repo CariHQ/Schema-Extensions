@@ -1,0 +1,187 @@
+swagger: '2.0'
+info:
+  title: 'Schema-Compiler API'
+  description: 'IdentityChain Schema-Compiler API'
+  version: '0.0.1'
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /types:
+    get:
+      summary: "The types supported by the high-level schema language"
+      description: "The types supported by the high-level schema language"
+      responses:
+        200:
+          description: "All the names of the supported types by the schema-compiler"
+          schema:
+            type: array
+            items:
+              type: string
+  /schema:
+    post:
+      summary: "Typecheck high-level schemas and compile them down to Indy schemas"
+      description: "Typecheck high-level schemas and compile them down to Indy schemas"
+      parameters:
+        - in: body
+          name: data
+          description: "The inputted high-level schemas"
+          required: true
+          schema:
+            $ref: '#/definitions/high_schemas'
+      responses:
+        200:
+          description: "The generated low-level Indy schemas"
+          schema:
+            $ref: '#/definitions/indy_schemas'
+        400:
+          description: "Failed to typecheck or compile high-level schemas"
+          schema:
+            $ref: '#/definitions/compiler_errors'
+  /cred:
+    post:
+      summary: "Typecheck the credential and its accompanying schemas, and produce a final credential with derived values"
+      description: "Typecheck the credential and its accompanying schemas, and produce a final credential with derived values"
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            type: object
+            description: "The inputted semi-filled credential and a 'database' of high-level schemas to use for typechecking and value-deriving"
+            properties:
+              credential:
+                $ref: '#/definitions/credential_format'
+              schemas:
+                $ref: '#/definitions/high_schemas'
+      responses:
+        200:
+          description: "The credential filled-in with derived values"
+          schema:
+            $ref: '#/definitions/credential_format'
+        400:
+          description: "Failed to typecheck or generate derived credential"
+          schema:
+            $ref: '#/definitions/compiler_errors'
+
+
+definitions:
+  indy_schemas:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        attr_names:
+          type: array
+          items:
+            type: string
+    example:
+      [{"name": "Degree"
+       ,"version": "1.0"
+       ,"attr_names": ["undergrad","last_name","first_name","postgrad","x","d","e","b","fullname"]}
+      ,{"name": "EmptySchema"
+       ,"version": "0.2"
+       ,"attr_names": []}
+      ]
+
+  high_schemas:
+    type: array
+    items:
+      type: object
+      required:
+        - attributes
+        - name
+        - version
+      properties:
+        name:
+          type: string
+          description: "A unique name for the new schema"
+        version:
+          type: string
+          description: "Schema version for the new schema"
+        parentSchemaName:
+          type: string
+          description: "Name of the parent schema"
+        parentSchemaVersion:
+          type: string
+          description: "Version of the parent schema"
+        attributes:
+          type: array
+          description: "List of attribute names put into the schema"
+          items:
+            required:
+              - name
+              - type
+            properties:
+              name:
+                type: string
+                description: "Name of the attribute (Key)"
+              type:
+                type: string
+                description: "A valid type for attributes, as requested using GET /types in schema compiler API"
+    example:
+      - name: "Passport"
+        version: "1.0"
+        parentSchemaName: "ID_NL"
+        parentSchemaVersion: "2.0"
+        attributes:
+        - name: "givenName"
+          type: string
+      - name: "ID_NL"
+        version: "2.0"
+        attributes:
+        - name: "nationality"
+          type: string
+
+  credential_format:
+    type: object
+    properties:
+      schema_id:
+        type: string
+      values:
+        type: object
+        additionalProperties:
+          type: object
+          properties:
+            raw:
+              type: string
+            encoded:
+              type: string
+    required:
+      - schema_id
+      - values
+    example:
+      {"schema_id":"4cU41vWW82ArfxJxHkzXPG:2:PhD_:0.2"
+       ,"values":{"__issue_date__": {"raw": "2018-06-20T11:05:30.995Z", "encoded": "0"},
+             "first_name": {"raw": "hello", "encoded": "456"},
+             "last_name": {"raw": "world", "encoded": "3"},
+             "undergrad": {"raw": "true", "encoded": "0"},
+             "postgrad": {"raw": "false", "encoded": "123"}
+            }
+      }
+  compiler_errors:
+    type: array
+    items:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            msg:
+              type: string
+              description: "A human-readable string that describes the error message"
+            at:
+              type: string
+              description: "The source location where the error happened"
+          required:
+            - msg
+      required:
+        - error
