@@ -1,27 +1,11 @@
 version: '3'
 
-networks:
-  indy-network:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: "${IDC_POOL_SUBNET}"
-
 services:
-  pool:
-    image: idchain/test-pool:1.4
-    ports:
-    - ${IDC_POOL_PORTS:-9701-9708}:${IDC_POOL_PORTS:-9701-9708}
-    - ${IDC_POOL_INFO_PORT-8001}:${IDC_POOL_INFO_PORT-8001}
+  schema_extensions:
+    build:
+      context: .
+    container_name: idchain-schema
+    image: idchain/schema-extensions
     environment:
-    - IDC_POOL_IP
-    - IDC_POOL_NAME=${IDC_POOL_NAME:-sandbox}
-    - IDC_PORT_START=${IDC_PORT_START:-9700}
-    networks:
-      indy-network:
-        ipv4_address: "${IDC_POOL_IP}"
-
-
- 
-
+      - IDC_SCHEMA_IP=${IDC_SCHEMA_IP-0.0.0.0}
+      - IDC_SCHEMA_PORT=${IDC_SCHEMA_PORT-9000}

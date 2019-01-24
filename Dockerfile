@@ -1,7 +1,7 @@
 FROM openjdk:8
 
-ENV SCHEMA_COMP_HOST="0.0.0.0"
-ENV SCHEMA_COMP_PORT="9000"
+ENV IDC_SCHEMA_IP="0.0.0.0"
+ENV IDC_SCHEMA_PORT="9000"
 
 
 # Install environment
@@ -23,6 +23,6 @@ RUN cp -r src/idchain bin/org/rascalmpl/library/ && \
 	jar uf idchain.jar org/rascalmpl/library/idchain/
 
 
-CMD java -jar bin/idchain.jar "idchain::HTTP" --host $SCHEMA_COMP_HOST --port $SCHEMA_COMP_PORT
+CMD java -jar bin/idchain.jar "idchain::HTTP" --host $IDC_SCHEMA_IP --port $IDC_SCHEMA_PORT
 
 
